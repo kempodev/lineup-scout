@@ -28,7 +28,6 @@ function TableHead() {
         <Th>Numero</Th>
         <Th>Nimi</Th>
         <Th>Ikä</Th>
-        <Th>Kansalaisuus</Th>
         <Th>Ottelut</Th>
         <Th>Avauksessa</Th>
         <Th>Peliaika</Th>
@@ -70,7 +69,6 @@ export default function PlayerDataTable({ playerData, match }: Props) {
                   last_name,
                   first_name,
                   age,
-                  nationality,
                   nr_of_matches,
                   starts,
                   playing_time_min,
@@ -93,7 +91,6 @@ export default function PlayerDataTable({ playerData, match }: Props) {
                       </Link>
                     </Td>
                     <Td>{age}</Td>
-                    <Td>{nationality.toUpperCase()}</Td>
                     <Td isNumeric>{nr_of_matches}</Td>
                     <Td isNumeric>{starts}</Td>
                     <Td isNumeric>{playing_time_min}</Td>
@@ -116,7 +113,6 @@ export default function PlayerDataTable({ playerData, match }: Props) {
                   last_name,
                   first_name,
                   age,
-                  nationality,
                   nr_of_matches,
                   starts,
                   playing_time_min,
@@ -137,7 +133,6 @@ export default function PlayerDataTable({ playerData, match }: Props) {
                       >{`${last_name} ${first_name}`}</Link>
                     </Td>
                     <Td>{age}</Td>
-                    <Td>{nationality.toUpperCase()}</Td>
                     <Td isNumeric>{nr_of_matches}</Td>
                     <Td isNumeric>{starts}</Td>
                     <Td isNumeric>{playing_time_min}</Td>
