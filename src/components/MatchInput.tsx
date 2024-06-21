@@ -5,17 +5,17 @@ import {
   Button,
   Input,
   Stack,
-  Image,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Box,
-  Center,
+  // Image,
+  // useDisclosure,
+  // Modal,
+  // ModalOverlay,
+  // ModalContent,
+  // ModalHeader,
+  // ModalCloseButton,
+  // ModalBody,
+  // ModalFooter,
+  // Box,
+  // Center,
   AlertDescription,
   FormControl,
   FormLabel,
@@ -38,7 +38,7 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
   const [matchId, setMatchId] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  // const { isOpen, onOpen, onClose } = useDisclosure()
 
   const fetchMatchData = async (id: string) => {
     setIsLoading(true)
@@ -91,7 +91,7 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
               oleva ottelun numero
             </AlertDescription>
 
-            <Button
+            {/* <Button
               variant={'ghost'}
               colorScheme='orange'
               mx={2}
@@ -136,7 +136,7 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
                   </Button>
                 </ModalFooter>
               </ModalContent>
-            </Modal>
+            </Modal> */}
           </Alert>
         ) : null}
       </Stack>
