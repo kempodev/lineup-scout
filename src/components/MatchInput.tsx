@@ -5,17 +5,6 @@ import {
   Button,
   Input,
   Stack,
-  // Image,
-  // useDisclosure,
-  // Modal,
-  // ModalOverlay,
-  // ModalContent,
-  // ModalHeader,
-  // ModalCloseButton,
-  // ModalBody,
-  // ModalFooter,
-  // Box,
-  // Center,
   AlertDescription,
   FormControl,
   FormLabel,
@@ -90,53 +79,6 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
               HUOM! Ottelu-id on URL-osoitteessa oleva numero, ei ottelusivulla
               oleva ottelun numero
             </AlertDescription>
-
-            {/* <Button
-              variant={'ghost'}
-              colorScheme='orange'
-              mx={2}
-              onClick={onOpen}
-            >
-              Ohje
-            </Button>
-            <Modal isOpen={isOpen} onClose={onClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Ohje</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Stack spacing={'36px'}>
-                    <Box>
-                      <Alert status='success' mb={2}>
-                        <AlertIcon />
-                        Kopioi ottelu-id URL:stä
-                      </Alert>
-                      <Image src='src/assets/url.png' alt='URL' />
-                    </Box>
-                    <Box>
-                      <Alert status='error' mb={2}>
-                        <AlertIcon />
-                        Älä käytä ottelun numeroa
-                      </Alert>
-                      <Center>
-                        <Image
-                          objectFit='contain'
-                          style={{ filter: 'grayscale(100%)' }}
-                          src='src/assets/bad_example.png'
-                          alt='Bad example'
-                        />
-                      </Center>
-                    </Box>
-                  </Stack>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button mr={3} onClick={onClose}>
-                    OK
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal> */}
           </Alert>
         ) : null}
       </Stack>

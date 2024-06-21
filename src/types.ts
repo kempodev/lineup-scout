@@ -3,6 +3,11 @@ export type MatchCall = {
   match?: Match
 }
 
+export type MatchesCall = {
+  call: Call
+  matches?: TeamMatch[]
+}
+
 export type PlayerCall = {
   call: Call
   player?: Player
@@ -18,6 +23,12 @@ export type TeamMatch = {
   match_id: string
   season_id: string
   status: string
+  category_id: string
+  category_name: string
+  date: string
+  time: string
+  winner_id: string
+  winner: 'Home' | 'Away' | 'Tie'
 }
 
 export type Match = {

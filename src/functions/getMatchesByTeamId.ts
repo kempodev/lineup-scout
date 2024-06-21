@@ -1,5 +1,10 @@
-export default async function getMatchesByTeam(teamId: number) {
-  const url = `https://spl.torneopal.fi/taso/rest/getMatches?team_id=${teamId}`
+import { MatchesCall } from '../types'
+
+export default async function getMatchesByTeamId(
+  teamId: string,
+  seasonId: string
+) {
+  const url = `https://spl.torneopal.fi/taso/rest/getMatches?team_id=${teamId}&season_id=${seasonId}`
 
   const options = {
     method: 'GET',
@@ -8,8 +13,14 @@ export default async function getMatchesByTeam(teamId: number) {
 
   try {
     const response = await fetch(url, options)
-    const json = await response.json()
-    return json.matches
+    const json: MatchesCall = await response.json()
+    if (json.call.status === 'error' && json.call.error_message) {
+      console.error('Error:', json.call.error_message)
+    }
+    if (json.call.status === 'error' && json.call.error) {
+      console.error('Error:', json.call.error)
+    }
+    return json
   } catch (err) {
     console.error('Error:', err)
   }
