@@ -132,10 +132,12 @@ export default function MatchInfo({
             {venue_name}, {venue_city_name}
           </Text>
         </CardBody>
-        <Alert status='warning'>
-          <AlertIcon />
-          {warningText}
-        </Alert>
+        {!warningText ? null : (
+          <Alert status='warning'>
+            <AlertIcon />
+            {warningText}
+          </Alert>
+        )}
       </Card>
     </>
   )
