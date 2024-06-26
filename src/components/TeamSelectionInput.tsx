@@ -26,7 +26,8 @@ export default function TeamSelectionInput({ match, setPlayerData }: Props) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const fetchPlayerData = async () => {
+  const fetchPlayerData = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if (!match || !teamId) return
     setIsLoading(true)
     const playerIdsToFetch = match?.lineups
@@ -77,25 +78,27 @@ export default function TeamSelectionInput({ match, setPlayerData }: Props) {
   }
 
   return (
-    <FormControl as='fieldset' disabled={isLoading} isInvalid={!!error}>
-      <Stack spacing={4}>
-        <FormLabel as='legend'>Valitse analysoitava joukkue:</FormLabel>
-        <RadioGroup onChange={setTeamId} value={teamId}>
-          <Stack spacing={2}>
-            <Radio value={match?.team_A_id}>{match?.team_A_name}</Radio>
-            <Radio value={match?.team_B_id}>{match?.team_B_name}</Radio>
-          </Stack>
-        </RadioGroup>
-        <FormErrorMessage>{error}</FormErrorMessage>
-        <Button
-          isDisabled={!teamId}
-          colorScheme='teal'
-          isLoading={isLoading}
-          onClick={() => fetchPlayerData()}
-        >
-          Hae pelaajadata
-        </Button>
-      </Stack>
-    </FormControl>
+    <form action='' onSubmit={(e) => fetchPlayerData(e)}>
+      <FormControl as='fieldset' disabled={isLoading} isInvalid={!!error}>
+        <Stack spacing={4}>
+          <FormLabel as='legend'>Valitse analysoitava joukkue:</FormLabel>
+          <RadioGroup onChange={setTeamId} value={teamId}>
+            <Stack spacing={2}>
+              <Radio value={match?.team_A_id}>{match?.team_A_name}</Radio>
+              <Radio value={match?.team_B_id}>{match?.team_B_name}</Radio>
+            </Stack>
+          </RadioGroup>
+          <FormErrorMessage>{error}</FormErrorMessage>
+          <Button
+            type='submit'
+            isDisabled={!teamId}
+            colorScheme='teal'
+            isLoading={isLoading}
+          >
+            Hae pelaajadata
+          </Button>
+        </Stack>
+      </FormControl>
+    </form>
   )
 }

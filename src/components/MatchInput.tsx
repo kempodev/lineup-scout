@@ -27,9 +27,12 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
   const [matchId, setMatchId] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  // const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const fetchMatchData = async (id: string) => {
+  const fetchMatchData = async (
+    e: React.FormEvent<HTMLFormElement>,
+    id: string
+  ) => {
+    e.preventDefault()
     setIsLoading(true)
     setMatch(null)
     setPlayerData(null)
@@ -52,36 +55,39 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
   }
 
   return (
-    <FormControl as='fieldset' disabled={isLoading} isInvalid={!!error}>
-      <Stack>
-        <FormLabel as='legend'>
-          Syötä ottelu-id Palloliiton tulospalvelusta:
-        </FormLabel>
-        <Input
-          id='matchId'
-          type='text'
-          placeholder='Ottelu-id'
-          value={matchId}
-          onChange={(e) => setMatchId(e.target.value)}
-        />
-        <FormErrorMessage>{error}</FormErrorMessage>
-        <Button
-          colorScheme='teal'
-          isLoading={isLoading}
-          onClick={() => fetchMatchData(matchId)}
-        >
-          Hae ottelu
-        </Button>
-        {!match && !isLoading ? (
-          <Alert status='warning'>
-            <AlertIcon />
-            <AlertDescription>
-              HUOM! Ottelu-id on URL-osoitteessa oleva numero, ei ottelusivulla
-              oleva ottelun numero
-            </AlertDescription>
-          </Alert>
-        ) : null}
-      </Stack>
-    </FormControl>
+    <form action='' onSubmit={(e) => fetchMatchData(e, matchId)}>
+      <FormControl as='fieldset' disabled={isLoading} isInvalid={!!error}>
+        <Stack>
+          <FormLabel as='legend'>
+            Syötä ottelu-id Palloliiton tulospalvelusta:
+          </FormLabel>
+          <Input
+            id='matchId'
+            type='text'
+            placeholder='Ottelu-id'
+            value={matchId}
+            onChange={(e) => setMatchId(e.target.value)}
+          />
+          <FormErrorMessage>{error}</FormErrorMessage>
+          <Button
+            type='submit'
+            colorScheme='teal'
+            isLoading={isLoading}
+            isDisabled={!matchId}
+          >
+            Hae ottelu
+          </Button>
+          {!match && !isLoading ? (
+            <Alert status='warning'>
+              <AlertIcon />
+              <AlertDescription>
+                Ottelu-id on URL-osoitteessa oleva numero, ei ottelusivulla
+                oleva ottelun numero.
+              </AlertDescription>
+            </Alert>
+          ) : null}
+        </Stack>
+      </FormControl>
+    </form>
   )
 }

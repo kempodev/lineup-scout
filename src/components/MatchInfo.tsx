@@ -144,10 +144,10 @@ export default function MatchInfo({
 
   function getWarningText() {
     if (status === 'Played') {
-      return 'Ottelu on jo pelattu'
+      return 'Ottelu on jo pelattu.'
     }
     if (lineups_filled != 1) {
-      return 'Ottelun kokoonpanoja ei ole vielä täytetty'
+      return 'Ottelun kokoonpanoja ei ole vielä täytetty.'
     }
   }
 
