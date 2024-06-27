@@ -91,10 +91,11 @@ export default function MatchInfo({
                 h={'20px'}
                 w={'90px'}
                 isLoaded={teamALast5Matches !== undefined}
+                data-testid='skeleton'
               >
                 {teamALast5Matches &&
                   getForm(teamALast5Matches, team_A_id).map((el, idx) => (
-                    <Badge key={idx} colorScheme={el.color}>
+                    <Badge key={idx} colorScheme={el.color} data-testid='badge'>
                       {el.text}
                     </Badge>
                   ))}
@@ -112,10 +113,11 @@ export default function MatchInfo({
                 h={'20px'}
                 w={'90px'}
                 isLoaded={teamBLast5Matches !== undefined}
+                data-testid='skeleton'
               >
                 {teamBLast5Matches &&
                   getForm(teamBLast5Matches, team_B_id).map((el, idx) => (
-                    <Badge key={idx} colorScheme={el.color}>
+                    <Badge key={idx} colorScheme={el.color} data-testid='badge'>
                       {el.text}
                     </Badge>
                   ))}
