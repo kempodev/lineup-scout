@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -8,11 +7,13 @@ import {
   RadioGroup,
   Stack,
 } from '@chakra-ui/react'
+import { Button } from '@/components/ui/button'
 
 import getPlayersByPlayerIds from '../functions/getPlayersByPlayerIds'
 import getStatsFromPlayers from '../functions/getStatsFromPlayers'
 
 import { Lineup, Match, PlayerData, PlayerStats } from '../types'
+import { Loader2 } from 'lucide-react'
 
 type Props = {
   match: Match | undefined | null
@@ -65,6 +66,7 @@ export default function TeamSelectionInput({ match, setPlayerData }: Props) {
       data.push({
         first_name,
         last_name,
+        player_name: `${last_name} ${first_name}`,
         birthyear,
         age,
         nationality,
@@ -91,11 +93,14 @@ export default function TeamSelectionInput({ match, setPlayerData }: Props) {
           <FormErrorMessage>{error}</FormErrorMessage>
           <Button
             type='submit'
-            isDisabled={!teamId}
-            colorScheme='teal'
-            isLoading={isLoading}
+            className='bg-teal-600 hover:bg-teal-700'
+            disabled={!teamId}
           >
-            Hae pelaajadata
+            {isLoading ? (
+              <Loader2 className='h-4 w-4 animate-spin' />
+            ) : (
+              <span>Hae pelaajadata</span>
+            )}
           </Button>
         </Stack>
       </FormControl>

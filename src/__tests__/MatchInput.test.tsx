@@ -121,7 +121,6 @@ describe('MatchInput component', () => {
     // await userEvent.click(button)
 
     expect(button).toBeDisabled()
-    expect(button).toHaveAttribute('data-loading', '')
 
     await waitFor(() => {
       expect(setMatch).toHaveBeenCalledWith({ ...mockMatch })

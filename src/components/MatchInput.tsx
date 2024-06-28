@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   Alert,
   AlertIcon,
-  Button,
   Input,
   Stack,
   AlertDescription,
@@ -10,6 +9,8 @@ import {
   FormLabel,
   FormErrorMessage,
 } from '@chakra-ui/react'
+import { Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 import getMatchById from '../functions/getMatchById'
 
@@ -71,11 +72,14 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
           <FormErrorMessage>{error}</FormErrorMessage>
           <Button
             type='submit'
-            colorScheme='teal'
-            isLoading={isLoading}
-            isDisabled={!matchId}
+            className='bg-teal-600 hover:bg-teal-700'
+            disabled={!matchId}
           >
-            Hae ottelu
+            {isLoading ? (
+              <Loader2 className='h-4 w-4 animate-spin' />
+            ) : (
+              <span>Hae ottelu</span>
+            )}
           </Button>
           {!match && !isLoading ? (
             <Alert status='warning'>

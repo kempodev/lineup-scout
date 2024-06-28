@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Center, Container, Heading, Stack } from '@chakra-ui/react'
 
 import MatchInfo from './components/MatchInfo'
 import MatchInput from './components/MatchInput'
@@ -16,34 +15,31 @@ function App() {
 
   return (
     <>
-      <Container maxW='2xl'>
-        <Stack spacing={4}>
-          <Center>
-            <Heading
-              my={4}
-              textTransform={'uppercase'}
-              letterSpacing={2}
-              fontFamily={'Spline Sans Mono'}
-              fontStyle={'italic'}
-            >
-              Lineup Scout
-            </Heading>
-          </Center>
+      <header className='py-3 mb-3'>
+        <h1 className='uppercase tracking-wider font-sans  text-center text-4xl font-bold'>
+          <span>Lineup</span>
+          <span className='bg-teal-600 text-white px-2 ml-1 rounded'>
+            Scout
+          </span>
+        </h1>
+      </header>
+      <main className='container space-y-6'>
+        <section className='mx-auto max-w-lg space-y-4'>
           <MatchInput
             match={match}
             setMatch={setMatch}
             setPlayerData={setPlayerData}
           />
-          {!match ? null : <MatchInfo match={match} />}
-          {!match ? null : (
+          {match && <MatchInfo match={match} />}
+          {match && (
             <TeamSelectionInput match={match} setPlayerData={setPlayerData} />
           )}
-        </Stack>
-      </Container>
+        </section>
 
-      {!playerData ? null : (
-        <PlayerDataTable playerData={playerData} match={match} />
-      )}
+        {playerData && match && (
+          <PlayerDataTable playerData={playerData} match={match} />
+        )}
+      </main>
     </>
   )
 }
