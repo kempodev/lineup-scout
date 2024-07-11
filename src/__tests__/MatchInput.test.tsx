@@ -129,10 +129,35 @@ describe('MatchInput component', () => {
     })
   })
 
-  test('handles errors', async () => {
+  test('handles errors with error_message', async () => {
     const user = userEvent.setup()
     mockGetMatchById.mockResolvedValueOnce({
       call: { status: 'error', error_message: 'Invalid ID' },
+    })
+
+    render(
+      <MatchInput
+        match={null}
+        setMatch={setMatch}
+        setPlayerData={setPlayerData}
+      />
+    )
+    const input = screen.getByPlaceholderText('Ottelu-id')
+    const button = screen.getByRole('button', { name: /Hae ottelu/i })
+
+    await user.type(input, 'invalid')
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(screen.getByText('Tapahtui virhe: Invalid ID')).toBeInTheDocument()
+      expect(button).not.toBeDisabled()
+    })
+  })
+
+  test('handles errors with error', async () => {
+    const user = userEvent.setup()
+    mockGetMatchById.mockResolvedValueOnce({
+      call: { status: 'error', error: 'Invalid ID' },
     })
 
     render(

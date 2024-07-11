@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <header className='py-3 mb-3'>
-        <h1 className='uppercase tracking-wider font-sans  text-center text-4xl font-bold'>
+        <h1 className='uppercase tracking-wider font-sans text-center text-4xl font-monoslab font-bold'>
           <span>Lineup</span>
           <span className='bg-teal-600 text-white px-2 ml-1 rounded'>
             Scout
