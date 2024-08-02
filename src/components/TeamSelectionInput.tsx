@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   FormControl,
   FormErrorMessage,
@@ -7,6 +7,8 @@ import {
   RadioGroup,
   Stack,
 } from '@chakra-ui/react'
+import { useQuery } from '@tanstack/react-query'
+
 import { Button } from '@/components/ui/button'
 
 import getPlayersByPlayerIds from '../functions/getPlayersByPlayerIds'
@@ -24,64 +26,74 @@ type Props = {
 
 export default function TeamSelectionInput({ match, setPlayerData }: Props) {
   const [teamId, setTeamId] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [playerIdsToFetch, setPlayerIdsToFetch] = useState<string[]>([])
 
-  const fetchPlayerData = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!match || !teamId) return
-    setIsLoading(true)
-    const playerIdsToFetch = match?.lineups
-      .filter((player) => player.team_id === teamId)
-      .map((player) => player.player_id)
+  const season = match?.season_id
 
-    // Get player data for the same season as the match being analyzed
-    const season = match.season_id
-    const players = await getPlayersByPlayerIds(playerIdsToFetch, season)
+  const { data, error, isFetching } = useQuery({
+    queryKey: ['players', playerIdsToFetch, season],
+    queryFn: () => {
+      if (!playerIdsToFetch.length || !season) {
+        throw new Error('Pelaajadatan haku ei onnistu')
+      }
+      return getPlayersByPlayerIds(playerIdsToFetch, season)
+    },
+    enabled: !!playerIdsToFetch.length && !!season,
+    refetchOnWindowFocus: false,
+  })
 
-    if (players === undefined || players.length === 0) {
-      setError('Pelaajadatan haku epäonnistui')
-      setIsLoading(false)
-      return
-    }
+  const processedPlayerData = useMemo(() => {
+    if (!match || !data) return null
 
-    // Aggregate stats per player, include only selected competition
     const { category_id } = match
-    const playerStats = getStatsFromPlayers(players, category_id)
-    // Combine player info and stats
-    const data: PlayerData[] = []
-    players.forEach((player) => {
-      // Get relevant data from player
-      const { first_name, last_name, birthyear, age, nationality } = player
-      // Find stats for the player in question
+    const playerStats = getStatsFromPlayers(data, category_id)
+
+    return data.map((player) => {
+      const { first_name, last_name, birthyear, age, nationality, player_id } =
+        player
       const stats = playerStats.find(
-        (statsItem) => statsItem.player_id === player.player_id
+        (statsItem) => statsItem.player_id === player_id
       ) as PlayerStats
-      // Get players starting status and number in upcoming match
-      const { start, shirt_number } = match.lineups.find(
-        (lineupPlayer) => lineupPlayer.player_id === player.player_id
+      const lineupInfo = match.lineups.find(
+        (lineupPlayer) => lineupPlayer.player_id === player_id
       ) as Lineup
 
-      // Return player info and stats in one object
-      data.push({
+      return {
         first_name,
         last_name,
         player_name: `${last_name} ${first_name}`,
         birthyear,
         age,
         nationality,
-        is_in_starting_lineup: start === '1' ? true : false,
-        shirt_number: shirt_number ? Number(shirt_number) : null,
+        is_in_starting_lineup: lineupInfo.start === '1',
+        shirt_number: lineupInfo.shirt_number
+          ? Number(lineupInfo.shirt_number)
+          : null,
         ...stats,
-      })
+      }
     })
-    setPlayerData(data)
-    setIsLoading(false)
+  }, [data, match])
+
+  useEffect(() => {
+    if (processedPlayerData) {
+      setPlayerData(processedPlayerData)
+    }
+  }, [processedPlayerData, setPlayerData])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!match || !teamId) return
+    const ids = match?.lineups
+      .filter((player) => player.team_id === teamId)
+      .map((player) => player.player_id)
+    setPlayerIdsToFetch(ids)
   }
 
+  if (!match) return null
+
   return (
-    <form action='' onSubmit={(e) => fetchPlayerData(e)}>
-      <FormControl as='fieldset' disabled={isLoading} isInvalid={!!error}>
+    <form action='' onSubmit={handleSubmit}>
+      <FormControl as='fieldset' disabled={isFetching} isInvalid={!!error}>
         <Stack spacing={4}>
           <FormLabel as='legend'>Valitse analysoitava joukkue:</FormLabel>
           <RadioGroup onChange={setTeamId} value={teamId}>
@@ -90,13 +102,13 @@ export default function TeamSelectionInput({ match, setPlayerData }: Props) {
               <Radio value={match?.team_B_id}>{match?.team_B_name}</Radio>
             </Stack>
           </RadioGroup>
-          <FormErrorMessage>{error}</FormErrorMessage>
+          <FormErrorMessage>{error?.message}</FormErrorMessage>
           <Button
             type='submit'
             className='bg-teal-600 hover:bg-teal-700'
             disabled={!teamId}
           >
-            {isLoading ? (
+            {isFetching ? (
               <Loader2 className='h-4 w-4 animate-spin' />
             ) : (
               <span>Hae pelaajadata</span>

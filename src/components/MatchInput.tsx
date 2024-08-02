@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Alert,
   AlertIcon,
@@ -10,8 +10,9 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useQuery } from '@tanstack/react-query'
 
+import { Button } from '@/components/ui/button'
 import getMatchById from '../functions/getMatchById'
 
 import { Match, PlayerData } from '../types'
@@ -25,63 +26,57 @@ type Props = {
 }
 
 export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
+  const [matchIdInput, setMatchIdInput] = useState('')
   const [matchId, setMatchId] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
 
-  const fetchMatchData = async (
-    e: React.FormEvent<HTMLFormElement>,
-    id: string
-  ) => {
+  const { data, error, isFetching } = useQuery({
+    queryKey: ['match', matchId],
+    queryFn: () => getMatchById(matchId),
+    enabled: !!matchId,
+    refetchOnWindowFocus: false,
+  })
+
+  useEffect(() => {
+    if (data && data.match) {
+      setMatch(data.match)
+    }
+  }, [data, setMatch])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
     setMatch(null)
     setPlayerData(null)
-    const result = await getMatchById(id)
-    if (result !== undefined) {
-      if (result.call.status === 'error' && result.call.error_message) {
-        setError(`Tapahtui virhe: ${result.call.error_message}`)
-        setIsLoading(false)
-        return
-      }
-      if (result.call.status === 'error' && result.call.error) {
-        setError(`Tapahtui virhe: ${result.call.error}`)
-        setIsLoading(false)
-        return
-      }
-      setMatch(result.match)
-      setError('')
-    }
-    setIsLoading(false)
+    setMatchId(matchIdInput)
   }
 
   return (
-    <form action='' onSubmit={(e) => fetchMatchData(e, matchId)}>
-      <FormControl as='fieldset' disabled={isLoading} isInvalid={!!error}>
+    <form action='' onSubmit={handleSubmit}>
+      <FormControl as='fieldset' isInvalid={!!error} disabled={isFetching}>
         <Stack>
           <FormLabel as='legend'>
             Syötä ottelu-id Palloliiton tulospalvelusta:
           </FormLabel>
           <Input
             id='matchId'
+            name='matchId'
             type='text'
             placeholder='Ottelu-id'
-            value={matchId}
-            onChange={(e) => setMatchId(e.target.value)}
+            value={matchIdInput}
+            onChange={(e) => setMatchIdInput(e.target.value)}
           />
-          <FormErrorMessage>{error}</FormErrorMessage>
+          <FormErrorMessage>{error?.message}</FormErrorMessage>
           <Button
             type='submit'
             className='bg-teal-600 hover:bg-teal-700'
-            disabled={!matchId}
+            disabled={isFetching || !matchIdInput}
           >
-            {isLoading ? (
+            {isFetching ? (
               <Loader2 className='h-4 w-4 animate-spin' />
             ) : (
               <span>Hae ottelu</span>
             )}
           </Button>
-          {!match && !isLoading ? (
+          {!match && !isFetching ? (
             <Alert status='warning'>
               <AlertIcon />
               <AlertDescription>
