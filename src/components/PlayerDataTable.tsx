@@ -240,7 +240,7 @@ export default function PlayerDataTable({ playerData, match }: Props) {
             </AlertDescription>
           </Alert>
         </div>
-        <div className='w-full'>
+        <div className='w-full' data-test='playerDataTable'>
           <DataTable
             columns={columns}
             data={playerData}

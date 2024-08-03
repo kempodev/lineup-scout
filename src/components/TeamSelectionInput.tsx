@@ -104,6 +104,7 @@ export default function TeamSelectionInput({ match, setPlayerData }: Props) {
           </RadioGroup>
           <FormErrorMessage>{error?.message}</FormErrorMessage>
           <Button
+            data-test='teamSelectionSubmit'
             type='submit'
             className='bg-teal-600 hover:bg-teal-700'
             disabled={!teamId}

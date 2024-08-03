@@ -57,6 +57,7 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
             Syötä ottelu-id Palloliiton tulospalvelusta:
           </FormLabel>
           <Input
+            data-test='matchIdInput'
             id='matchId'
             name='matchId'
             type='text'
@@ -64,8 +65,11 @@ export default function MatchInput({ match, setMatch, setPlayerData }: Props) {
             value={matchIdInput}
             onChange={(e) => setMatchIdInput(e.target.value)}
           />
-          <FormErrorMessage>{error?.message}</FormErrorMessage>
+          <FormErrorMessage data-test='matchInputErrorMessage'>
+            {error?.message}
+          </FormErrorMessage>
           <Button
+            data-test='matchInputSubmit'
             type='submit'
             className='bg-teal-600 hover:bg-teal-700'
             disabled={isFetching || !matchIdInput}
